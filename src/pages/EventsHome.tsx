@@ -1,25 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { Tile } from "../types/tiles"; // Import the Tile type from the tiles.d.ts file
 
-const EventsHome = () => {
-  type Tile = {
-    date: string;
-    message: string;
-    year?: string;
-  };
 
-  // Initial list of tiles
-  const initialTiles: Tile[] = [
-    { date: "2021-06-21", message: "Message D" },
-    { date: "2021-06-01", message: "Message 1" },
-    { date: "2021-06-11", message: "Message 2" },
-    { date: "2018-06-18", message: "Message A" },
-    { date: "2018-06-01", message: "Message 1" },
-    { date: "2018-06-11", message: "Message 2" },
-    { date: "2019-06-19", message: "Message B" },
-    { date: "2020-06-20", message: "Message C" },
-    { date: "2026-06-26", message: "Message E" },
-  ];
+interface EventProps {
+  tiles: Record<string, Tile[]>;
+  years: string[];
+  updateTiles: (data: Record<string, Tile[]>) => void;
+  updateYears: (years: string[]) => void;
+}
 
+const EventsHome:React.FC<EventProps> = ( {tiles, years, updateTiles, updateYears }) => {
+  console.log(tiles, years);
   const pallette = [
     "#6699ff",
     "#737dfe",
@@ -62,38 +53,9 @@ const EventsHome = () => {
     return pallette[index];
   };
 
-  const [tiles, setTiles] = useState<Record<string, Tile[]>>(() => ({}));
-  const [years, setYears] = useState<string[]>([""]);
   const [isDragging, setIsDragging] = useState(false);
   const [tiltedTile, setTiltedTile] = useState<string | null>(null);
 
-  useEffect(() => {
-    assignYearKeyToTilesData();
-  }, [])
-
-  const assignYearKeyToTilesData = () => {
-    const newDataSet: Record<string, Tile[]> = {};
-    initialTiles.forEach((tileData) => {
-      const tileDateYear = new Date(tileData.date).getFullYear().toString();
-      if (!newDataSet[tileDateYear]) {
-        newDataSet[tileDateYear] = [];
-      }
-      newDataSet[tileDateYear].push({
-        ...tileData,
-        year: tileDateYear,
-      });
-    });
-
-    setTiles(newDataSet);
-    setYears(Object.keys(newDataSet));
-  };
-
-  // const getAllYearsFromDataSet = () => {
-  //   return tiles.map((tileData) => {
-  //     const tileDateYear = new Date(tileData.date).getFullYear();
-  //     return tileDateYear.toString();
-  //   });
-  // };
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -158,8 +120,8 @@ const EventsHome = () => {
       }
     });
     
-    setTiles(newDataSet);
-    setYears(Object.keys(newDataSet))
+    updateTiles(newDataSet);
+    updateYears(Object.keys(newDataSet))
     setIsDragging(false);
     setTiltedTile(null);
   };
@@ -170,7 +132,6 @@ const EventsHome = () => {
 
   return (
     <div className="flex flex-col p-6 gap-4">
-      <div className="text-white">Buttons Section</div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
         {years.map((year, index) => {
           const randomColor = getPalletteColor(index);
