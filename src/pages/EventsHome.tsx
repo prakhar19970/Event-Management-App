@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Tile } from "../types/tiles"; // Import the Tile type from the tiles.d.ts file
 
-
 interface EventProps {
   tiles: Record<string, Tile[]>;
   years: string[];
@@ -9,8 +8,12 @@ interface EventProps {
   updateYears: (years: string[]) => void;
 }
 
-const EventsHome:React.FC<EventProps> = ( {tiles, years, updateTiles, updateYears }) => {
-  console.log(tiles, years);
+const EventsHome: React.FC<EventProps> = ({
+  tiles,
+  years,
+  updateTiles,
+  updateYears,
+}) => {
   const pallette = [
     "#6699ff",
     "#737dfe",
@@ -52,23 +55,20 @@ const EventsHome:React.FC<EventProps> = ( {tiles, years, updateTiles, updateYear
   const getPalletteColor = (index: number) => {
     return pallette[index];
   };
-
+  const [dragElement, setDragElement] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [tiltedTile, setTiltedTile] = useState<string | null>(null);
-
+  const [draggedTile, setDraggedTile] = useState<string | null>(null);
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
     tileId: string
   ) => {
     e.dataTransfer.setData("tile_id", tileId.toString());
-
+    setDragElement(tileId.toString());
     const tileCard = document.getElementById(tileId);
-    setTiltedTile(tileId);
-    setIsDragging(true);
+    setDraggedTile(tileId);
     if (tileCard instanceof HTMLElement) {
       tileCard.style.opacity = "0";
-      tileCard.style.rotate = "6deg";
     }
   };
 
@@ -77,13 +77,11 @@ const EventsHome:React.FC<EventProps> = ( {tiles, years, updateTiles, updateYear
     tileId: string
   ) => {
     const tileCard = document.getElementById(tileId);
-
     if (tileCard instanceof HTMLElement) {
-      tileCard.style.opacity = "100";
-      tileCard.style.rotate = "0deg";
+      tileCard.style.opacity = "1";
     }
     setIsDragging(false);
-    setTiltedTile(null);
+    setDraggedTile(null);
   };
 
   const handleOnDrop = (
@@ -94,11 +92,6 @@ const EventsHome:React.FC<EventProps> = ( {tiles, years, updateTiles, updateYear
     e.preventDefault();
     const tileId = e.dataTransfer.getData("tile_id");
     const tileCard = document.getElementById(tileId);
-    if (tileCard instanceof HTMLElement) {
-      tileCard.style.opacity = "100";
-      tileCard.style.rotate = "0deg";
-    }
- 
     const movedTileIndex = Number(tileId.charAt(tileId.length - 1));
     const movedTileYear = tileId.slice(0, 4);
     const newDataSet: Record<string, Tile[]> = JSON.parse(
@@ -112,18 +105,19 @@ const EventsHome:React.FC<EventProps> = ( {tiles, years, updateTiles, updateYear
       movedTile.year = year;
       movedTile.date = `${year}${movedTile.date.slice(4)}`;
     }
+
     newDataSet[year].splice(position, 0, movedTile);
 
-    Object.keys(newDataSet).forEach((key)=>{
-      if(!newDataSet[key] || newDataSet[key].length === 0){
+    Object.keys(newDataSet).forEach((key) => {
+      if (!newDataSet[key] || newDataSet[key].length === 0) {
         delete newDataSet[key];
       }
     });
-    
+
     updateTiles(newDataSet);
-    updateYears(Object.keys(newDataSet))
+    updateYears(Object.keys(newDataSet));
     setIsDragging(false);
-    setTiltedTile(null);
+    setDraggedTile(null);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -146,13 +140,16 @@ const EventsHome:React.FC<EventProps> = ( {tiles, years, updateTiles, updateYear
                 {year}
               </div>
               <div
-                className="rounded-lg"
+                className="rounded-lg h-[325px]"
                 onDragOver={(e) => handleDragOver(e)}
                 style={{
                   background: `linear-gradient(to bottom right, ${randomColor}, #FFFFFF1A)`,
                 }}
               >
-                <div className="flex flex-col gap-2 p-4 rounded-lg">
+                <div
+                  className="flex flex-col gap-2 p-4 rounded-lg h-full overflow-y-scroll"
+                  onDrop={(e) => handleOnDrop(e, year, tiles[year].length)}
+                >
                   {tiles[year]?.map((tile, index) => {
                     return (
                       <div
@@ -163,7 +160,10 @@ const EventsHome:React.FC<EventProps> = ( {tiles, years, updateTiles, updateYear
                           transition-transform ease-in-out duration-300`}
                         draggable
                         onDragOver={(e) => handleDragOver(e)}
-                        onDrop={(e) => handleOnDrop(e, year, index)}
+                        onDrop={(e) => {
+                          e.stopPropagation();
+                          handleOnDrop(e, year, index);
+                        }}
                         onDragStart={(e) =>
                           handleDragStart(e, `${year}-tile-${index}`)
                         }
@@ -174,12 +174,19 @@ const EventsHome:React.FC<EventProps> = ( {tiles, years, updateTiles, updateYear
                         <div className="flex flex-1 justify-end text-xs font-normal">
                           {tile.date}
                         </div>
-                        <div className="text-md font-semibold">
+                        <div className="text-sm font-semibold">
                           {tile.message}
                         </div>
                       </div>
                     );
                   })}
+                  <div
+                    className="flex flex-grow rounded-lg "
+                    onDrop={(e) =>
+                      handleOnDrop(e, year, tiles[year]?.length || 0)
+                    } // Drop at the end of the list
+                    onDragOver={(e) => handleDragOver(e)} // Allow dropping
+                  />
                 </div>
               </div>
             </div>

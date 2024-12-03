@@ -36,6 +36,20 @@ const MainLayout = () => {
     }
   }
 
+  const handleSortedOrder =()=>{
+    const newTileData = { ...tileDataSet };
+    if (newTileData) {
+      Object.keys(newTileData).forEach((year)=>{
+        const sortedData = newTileData[year].sort((tileA:Tile, tileB: Tile) => new Date(tileA.date).getTime() - new Date(tileB.date).getTime());
+
+        newTileData[year] = sortedData;
+      })
+
+        setTileDataSet(newTileData);
+      }
+      // setYears(Object.keys(restoredDataSet));
+    }
+
   useEffect(()=>{
     localStorage.setItem('initialTileDataSet', JSON.stringify(initialTiles));
     const organizedDataSet = assignYearKeyToTilesData(initialTiles);
@@ -46,7 +60,8 @@ const MainLayout = () => {
   return (
     <div>
       <Header>
-        <Button label="Inital Order" onClick={() => handleInitialOrder()}/>
+        <Button primary label="Inital Order" onClick={() => handleInitialOrder()}/>
+        <Button secondary label="Sorted Order" onClick={() => handleSortedOrder()}/>
       </Header>
       <EventsHome tiles={tileDataSet} years={years} updateTiles={setTileDataSet} updateYears={setYears} />
     </div>
