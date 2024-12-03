@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Tile } from "../types/tiles"; // Import the Tile type from the tiles.d.ts file
+import { TileComp } from "../components/Tile";
 
 interface EventProps {
   tiles: Record<string, Tile[]>;
@@ -55,33 +56,33 @@ const EventsHome: React.FC<EventProps> = ({
   const getPalletteColor = (index: number) => {
     return pallette[index];
   };
-  const [dragElement, setDragElement] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
+
   const [draggedTile, setDraggedTile] = useState<string | null>(null);
+  const [placeholderPosition, setPlaceholderPosition] = useState<{
+    year?: string | null;
+    position?: number | null;
+  }>({ year: null, position: null });
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
     tileId: string
   ) => {
     e.dataTransfer.setData("tile_id", tileId.toString());
-    setDragElement(tileId.toString());
-    const tileCard = document.getElementById(tileId);
-    setDraggedTile(tileId);
-    if (tileCard instanceof HTMLElement) {
-      tileCard.style.opacity = "0";
-    }
+    setDraggedTile(tileId.toString());
   };
 
-  const handleDragEnd = (
-    e: React.DragEvent<HTMLDivElement>,
-    tileId: string
-  ) => {
-    const tileCard = document.getElementById(tileId);
-    if (tileCard instanceof HTMLElement) {
-      tileCard.style.opacity = "1";
-    }
-    setIsDragging(false);
+  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+    e.dataTransfer.clearData();
     setDraggedTile(null);
+  };
+
+  const handleDragOver = (
+    e: React.DragEvent<HTMLDivElement>,
+    year?: string,
+    position?: number
+  ) => {
+    e.preventDefault();
+    setPlaceholderPosition({ year, position }); // Update ref
   };
 
   const handleOnDrop = (
@@ -90,8 +91,8 @@ const EventsHome: React.FC<EventProps> = ({
     position: number
   ) => {
     e.preventDefault();
+
     const tileId = e.dataTransfer.getData("tile_id");
-    const tileCard = document.getElementById(tileId);
     const movedTileIndex = Number(tileId.charAt(tileId.length - 1));
     const movedTileYear = tileId.slice(0, 4);
     const newDataSet: Record<string, Tile[]> = JSON.parse(
@@ -116,14 +117,13 @@ const EventsHome: React.FC<EventProps> = ({
 
     updateTiles(newDataSet);
     updateYears(Object.keys(newDataSet));
-    setIsDragging(false);
     setDraggedTile(null);
+    setPlaceholderPosition({ year: null, position: null });
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
+  const checkIfDraggedTile = (tileId: string): boolean => {
+    return draggedTile === tileId;
   };
-
   return (
     <div className="flex flex-col p-6 gap-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
@@ -141,51 +141,53 @@ const EventsHome: React.FC<EventProps> = ({
               </div>
               <div
                 className="rounded-lg h-[325px]"
-                onDragOver={(e) => handleDragOver(e)}
                 style={{
                   background: `linear-gradient(to bottom right, ${randomColor}, #FFFFFF1A)`,
                 }}
               >
-                <div
-                  className="flex flex-col gap-2 p-4 rounded-lg h-full overflow-y-scroll"
-                  onDrop={(e) => handleOnDrop(e, year, tiles[year].length)}
-                >
+                <div className="flex flex-col gap-2 p-4 rounded-lg h-full overflow-y-scroll">
                   {tiles[year]?.map((tile, index) => {
                     return (
-                      <div
-                        id={`${year}-tile-${index}`}
-                        key={`${year}-tile-${index}`}
-                        className={`bg-white/15 shadow-lg backdrop-blur-md p-4 
-                          rounded-lg hover:bg-white/35 hover:scale-105
-                          transition-transform ease-in-out duration-300`}
-                        draggable
-                        onDragOver={(e) => handleDragOver(e)}
-                        onDrop={(e) => {
-                          e.stopPropagation();
-                          handleOnDrop(e, year, index);
-                        }}
-                        onDragStart={(e) =>
-                          handleDragStart(e, `${year}-tile-${index}`)
-                        }
-                        onDragEnd={(e) =>
-                          handleDragEnd(e, `${year}-tile-${index}`)
-                        }
-                      >
-                        <div className="flex flex-1 justify-end text-xs font-normal">
-                          {tile.date}
-                        </div>
-                        <div className="text-sm font-semibold">
-                          {tile.message}
-                        </div>
+                      <div key={`${year}-tile-${index}`}>
+                        {/* Invisible Drop Zone created when a Tile is dragged over to a specific position 
+                          Helps Show user where they can drop the Tile */}
+                        {placeholderPosition.year === year &&
+                          placeholderPosition.position === index && (
+                            <div
+                              className="h-[60px]"
+                              onDragOver={(e) => {
+                                e.stopPropagation();
+                                handleDragOver(e, year, index);
+                              }}
+                              onDrop={(e) => {
+                                e.stopPropagation();
+                                handleOnDrop(e, year, index);
+                              }}
+                            />
+                          )}
+
+                        {/* Tile Component */}
+                        <TileComp
+                          tileData={tile}
+                          year={year}
+                          position={index}
+                          onDragStart={handleDragStart}
+                          onDragEnd={handleDragEnd}
+                          onDragOver={handleDragOver}
+                          onDrop={handleOnDrop}
+                          checkIfDraggedTile={checkIfDraggedTile}
+                        />
                       </div>
                     );
                   })}
+
+                  {/* DropZone at the end of list in Case there is space */}
                   <div
                     className="flex flex-grow rounded-lg "
+                    onDragOver={(e) => handleDragOver(e)}
                     onDrop={(e) =>
                       handleOnDrop(e, year, tiles[year]?.length || 0)
-                    } // Drop at the end of the list
-                    onDragOver={(e) => handleDragOver(e)} // Allow dropping
+                    }
                   />
                 </div>
               </div>

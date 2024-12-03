@@ -41,13 +41,10 @@ const MainLayout = () => {
     if (newTileData) {
       Object.keys(newTileData).forEach((year)=>{
         const sortedData = newTileData[year].sort((tileA:Tile, tileB: Tile) => new Date(tileA.date).getTime() - new Date(tileB.date).getTime());
-
         newTileData[year] = sortedData;
       })
-
         setTileDataSet(newTileData);
       }
-      // setYears(Object.keys(restoredDataSet));
     }
 
   useEffect(()=>{
