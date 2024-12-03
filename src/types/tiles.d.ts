@@ -1,5 +1,5 @@
 export type Tile = {
     date: string;
-    message: string;
-    year?: string;
+    message: string | null;
+    year?: string | null;
 };

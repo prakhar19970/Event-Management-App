@@ -1,4 +1,4 @@
-import { Tile } from "../types/tiles";
+import { Tile } from "@/types/tiles";
 
 interface TileProps {
   tileData: Tile;
@@ -50,10 +50,10 @@ export const TileComp: React.FC<TileProps> = ({
         onDrop(e, year, position);
       }}
     >
-      <div className="flex flex-1 justify-end text-xs font-normal">
-        {tileData.date}
+      <div className="flex flex-1 justify-end text-xs font-semibold">
+        {tileData?.date}
       </div>
-      <div className="text-sm font-semibold">{tileData.message}</div>
+      <div className="text-sm font-semibold break-words">{tileData?.message}</div>
     </div>
   );
 };
