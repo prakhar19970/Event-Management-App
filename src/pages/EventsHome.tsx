@@ -67,7 +67,6 @@ const EventsHome: React.FC<EventProps> = ({
     position?: number
   ) => {
     e.preventDefault();
-
     // If dragging within the same year
     if (
       draggedTile &&
@@ -99,7 +98,6 @@ const EventsHome: React.FC<EventProps> = ({
     position: number
   ) => {
     e.preventDefault();
-    // const tileId = e.dataTransfer.getData("tile_id");
     if (draggedTile) {
       const movedTileIndex = parseInt(
         draggedTile?.charAt(draggedTile.length - 1),
