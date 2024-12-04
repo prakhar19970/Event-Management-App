@@ -1,5 +1,5 @@
 export const palletteColors = [
-    "#6699ff",
+  "#6699ff",
     "#737dfe",
     "#cb5eee",
     "#fa7cbb",
@@ -35,4 +35,19 @@ export const palletteColors = [
     "#ffcac9",
     "#2f80ed",
     "#b2ffda",
+    /* Primary Colors */
+    "#d0ebff",    // soft-blue
+    "#ffe8cc",    // muted-orange
+    "#d3f9d8",    // pastel-green
+    "#eae2f8",    // lavender
+    "#ffadad",    // soft-red
+    "#ffd6a5",    // muted-peach
+    "#fdffb6",    // pastel-yellow
+    "#caffbf",    // light-mint-green
+    "#9bf6ff",    // sky-blue
+    "#a0c4ff",    // baby-blue
+    "#bdb2ff",    // soft-violet
+    "#ffc6ff",    // light-pink
+    "#d4a5a5",    // muted-rose
+    "#81b29a"     // sage-green
   ];

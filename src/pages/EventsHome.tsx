@@ -111,7 +111,6 @@ const EventsHome: React.FC<EventProps> = ({
       newDataSet[movedTileYear].splice(movedTileIndex, 1);
 
       if (year !== movedTileYear) {
-        movedTile.year = year;
         movedTile.date = `${year}${movedTile?.date?.slice(4)}`;
       }
 
@@ -130,7 +129,7 @@ const EventsHome: React.FC<EventProps> = ({
     }
   };
 
-  const saveTileData = (tileData: { message: string | null; date: string }) => {
+  const saveTileData = (tileData: { message: string; date: string }) => {
     const newDataSet: Record<string, Tile[]> = JSON.parse(
       JSON.stringify(tiles)
     );
@@ -143,7 +142,6 @@ const EventsHome: React.FC<EventProps> = ({
     newDataSet[year].push({
       message: tileData.message,
       date: formattedDate,
-      year: year.toString(),
     });
     updateTiles(newDataSet);
     updateYears(Object.keys(newDataSet));
@@ -162,17 +160,14 @@ const EventsHome: React.FC<EventProps> = ({
               <div className="flex flex-col gap-4" key={`${year}-${index}`}>
                 <div
                   style={{
-                    background: `linear-gradient(to bottom right, ${randomColor}, #FFFFFF66)`,
+                    borderTop: `10px solid ${randomColor}`,
                   }}
-                  className="flex rounded p-2 justify-end text-lg font-semibold"
+                  className="flex rounded-t-lg rounded-b-sm p-2 text-lg font-semibold backdrop-blur-md bg-white"
                 >
                   {year}
                 </div>
                 <div
-                  className="rounded-lg h-[325px]"
-                  style={{
-                    background: `linear-gradient(to bottom right, ${randomColor}, #FFFFFF1A)`,
-                  }}
+                  className="rounded-xl h-[325px] bg-gradient-to-br from-white/60 to-white/10 backdrop-blur-md"
                 >
                   <div className="flex flex-col gap-2 p-4 rounded-lg h-full overflow-y-scroll">
                     {tiles[year]?.map((tile, index) => {
@@ -207,6 +202,7 @@ const EventsHome: React.FC<EventProps> = ({
                             onDragEnd={handleDragEnd}
                             onDragOver={handleDragOver}
                             onDrop={handleOnDrop}
+                            color={randomColor}
                             checkIfDraggedTile={checkIfDraggedTile}
                           />
                           {/* 

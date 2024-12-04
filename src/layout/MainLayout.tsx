@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Header } from "@/components";
 import EventsHome from "@/pages/EventsHome";
 import { Tile } from "@/types/tile";
-import { initialTiles } from "@/constants/data";
+import { input } from "@/constants/data";
 
 const MainLayout = () => {
   const [tileDataSet, setTileDataSet] = useState<Record<string, Tile[]>>(
@@ -19,7 +19,6 @@ const MainLayout = () => {
       }
       newDataSet[tileDateYear].push({
         ...tileData,
-        year: tileDateYear,
       });
     });
 
@@ -51,8 +50,8 @@ const MainLayout = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem("initialTileDataSet", JSON.stringify(initialTiles));
-    const organizedDataSet = assignYearKeyToTilesData(initialTiles);
+    localStorage.setItem("initialTileDataSet", JSON.stringify(input));
+    const organizedDataSet = assignYearKeyToTilesData(input);
     setTileDataSet(organizedDataSet);
     setYears(Object.keys(organizedDataSet));
   }, []);

@@ -1,7 +1,7 @@
 // Initial list of tiles
 import { Tile } from "../types/tile"; // Import the Tile type from the tiles.d.ts file
 
-export const initialTiles: Tile[] = [
+export const input: Tile[] = [
     // year 2021
     { date: "2021-06-21", message: "Message C" },
     { date: "2021-06-01", message: "Message A" },

@@ -1,5 +1,1 @@
-export interface Tile {
-    date: string;
-    message: string | null;
-    year?: string | null;
-};
+export type Tile = Record<"date" | "message", string>;

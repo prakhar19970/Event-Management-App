@@ -11,14 +11,11 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     open && (
       <>
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 p-4 items-center justify-center flex"
-          // onClick={onClose}
-        ></div>
+        <div className="fixed inset-0 bg-black bg-opacity-20 p-4 items-center justify-center flex" />
         <div
           className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex 
             flex-col gap-3 justify-center items-center p-4 w-1/2 rounded-md 
-            bg-gradient-to-br from-white/60 to-white/10 backdrop-blur-md z-10
+            bg-gradient-to-br from-white/90 to-white/10 backdrop-blur-lg z-10
             ${className}`}
         >
           {showClose && (

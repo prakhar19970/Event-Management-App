@@ -1,7 +1,9 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import '@/index.css'
-import App from '@/App.tsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "@/index.css";
+import App from "@/App.tsx";
+import backgroundImage from "@/assets/3d-background.jpg";
+
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -10,8 +12,14 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <div className="min-h-screen bg-gradient-to-r from-black via-purple-500 to-black">
+    <div
+      className="min-h-screen"
+      style={{
+        background: `url(${backgroundImage}) no-repeat`,
+        backgroundSize: "cover",
+      }}
+    >
       <App />
     </div>
-  </StrictMode>,
-)
+  </StrictMode>
+);

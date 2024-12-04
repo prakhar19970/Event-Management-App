@@ -52,6 +52,7 @@ interface TileProps {
     position: number
   ) => void;
   checkIfDraggedTile: (tileId: string) => boolean;
+  color?: string;
 }
 
 export {ButtonProps, ModalProps, HeaderProps, DatePickerInputProps, ErrorMessageProps, TileProps};

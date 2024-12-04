@@ -26,14 +26,14 @@ interface Error {
 interface AddFormTitleProps {
   className?: string;
   onSave: (newTile: {
-    message: string | null;
+    message: string;
     date: string | undefined;
   }) => void;
 }
 
 export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<string>("");
   const [errors, setErrors] = useState<Error>({});
 
   // Handle save and validate using Zod
@@ -56,7 +56,7 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
     }
 
     // If validation passes, send new tile to the main tiles-dataset
-    const newTile: { message: string | null; date: string | undefined } = {
+    const newTile: { message: string; date: string | undefined } = {
       message,
       date: selectedDate?.toString(),
     };
@@ -103,6 +103,7 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
       <div className="flex justify-center">
         <Button
           label="Save"
+          secondary
           className="flex justify-center w-1/2 items-center"
           onClick={handleSave}
         />

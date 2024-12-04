@@ -18,7 +18,7 @@ export const Button: React.FC<ButtonProps> = ({
           : secondary
           ? "bg-[#F40076] bg-gradient-to-br from-white/60 to-white/10"
           : ""
-      } p-2  md:p-3 rounded shadow-md text-white font-semibold text-xs md:text-sm lg:text-md ${className}`}
+      } p-2  md:p-3 rounded shadow-md font-semibold text-xs md:text-sm lg:text-md ${className}`}
       onClick={onClick}
     >
       {icon && iconPosition === "left" && (
