@@ -1,9 +1,8 @@
-import MainLayout from './layout/MainLayout';
-import './App.css'
+import MainLayout from '@/layout/MainLayout';
 
 function App() {
   return (
-    <div className='bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500'>
+    <div>
       <MainLayout />
     </div>
   )
