@@ -158,7 +158,7 @@ const EventsHome: React.FC<EventProps> = ({
           {years.map((year, index) => {
             const randomColor = getPalletteColor(index);
             return (
-              <div className="flex flex-col gap-4" key={`${year}-${index} `}>
+              <div className="flex flex-col gap-4" key={`${year}-${index}`}>
                 <div
                   style={{
                     background: `linear-gradient(to bottom right, ${randomColor}, #FFFFFF66)`,
