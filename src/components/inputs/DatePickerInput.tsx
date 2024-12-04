@@ -9,49 +9,44 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-interface DatePickerInputProps {
-  onSetDate: (newDate: Date | undefined) => void;
-  selectedDate: Date | undefined;
-  className?: string
-}
+import { DatePickerInputProps } from "@/types/props";
 
 export const DatePickerInput: React.FC<DatePickerInputProps> = ({
   onSetDate,
   selectedDate,
-  className
+  className,
 }) => {
   return (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={"outline"}
-            className={cn(
-              "bg-transparent justify-start text-left font-normal",
-              !selectedDate && "text-muted-foreground",
-              className
-            )}
-          >
-            <CalendarIcon />
-            {selectedDate ? (
-              format(selectedDate, "yyyy-MM-dd")
-            ) : (
-              <span>Pick a date</span>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent
-          className="w-auto p-0 bg-gradient-to-br from-white/60 to-white/10 backdrop-blur-md bg-transparent"
-          align="start"
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "bg-transparent justify-start text-left font-normal",
+            !selectedDate && "text-muted-foreground",
+            className
+          )}
         >
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={onSetDate}
-            // disabled={{ after: new Date() }} // Disable future dates
-            initialFocus
-          />
-        </PopoverContent>
-      </Popover>
+          <CalendarIcon />
+          {selectedDate ? (
+            format(selectedDate, "yyyy-MM-dd")
+          ) : (
+            <span>Pick a date</span>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-auto p-0 bg-gradient-to-br from-white/60 to-white/10 backdrop-blur-md bg-transparent"
+        align="start"
+      >
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={onSetDate}
+          // disabled={{ after: new Date() }} // Disable future dates
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
   );
 };

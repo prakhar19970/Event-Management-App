@@ -1,13 +1,6 @@
 import { X } from "lucide-react";
-import { ReactNode } from "react";
+import { ModalProps } from "@/types/props";
 
-interface ModalProps {
-  children: ReactNode;
-  className?: string;
-  open: boolean;
-  showClose?: boolean;
-  close: () => void;
-}
 export const Modal: React.FC<ModalProps> = ({
   children,
   className,

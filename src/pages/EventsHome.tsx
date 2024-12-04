@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Tile } from "@/types/tiles"; // Import the Tile type from the tiles.d.ts file
+import { useEffect, useState } from "react";
+import { Tile } from "@/types/tile"; // Import the Tile type from the tiles.d.ts file
 import { TileComp, Button, AddTileForm, Modal } from "@/components";
 import { CirclePlus } from "lucide-react";
 import { format } from "date-fns";
@@ -21,13 +21,19 @@ const EventsHome: React.FC<EventProps> = ({
   const getPalletteColor = (index: number) => {
     return palletteColors[index];
   };
-
+  const [visibleTiles, setVisibleTiles] =
+    useState<Record<string, Tile[]>>(tiles);
   const [draggedTile, setDraggedTile] = useState<string | null>(null);
   const [placeholderPosition, setPlaceholderPosition] = useState<{
     year?: string | null;
     position?: number | null;
+    flag?: string | null;
   }>({ year: null, position: null });
   const [openAddTileModal, setOpenAddTileModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    setVisibleTiles(tiles);
+  }, [tiles]);
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -35,10 +41,23 @@ const EventsHome: React.FC<EventProps> = ({
   ) => {
     e.dataTransfer.setData("tile_id", tileId.toString());
     setDraggedTile(tileId.toString());
+
+    // Remove dragged tile from visibleTiles
+    const draggedYear = tileId.slice(0, 4);
+    const draggedIndex = Number(tileId.charAt(tileId.length - 1));
+
+    const newVisibleTiles: Record<string, Tile[]> = JSON.parse(
+      JSON.stringify(visibleTiles)
+    );
+
+    newVisibleTiles[draggedYear].splice(draggedIndex, 1);
+
+    setVisibleTiles(newVisibleTiles);
   };
 
   const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
     e.dataTransfer.clearData();
+    setVisibleTiles(tiles); // Reset to original tiles
     setDraggedTile(null);
   };
 
@@ -48,7 +67,30 @@ const EventsHome: React.FC<EventProps> = ({
     position?: number
   ) => {
     e.preventDefault();
-    setPlaceholderPosition({ year, position });
+    
+    // If dragging within the same year
+    if (
+      draggedTile &&
+      year &&
+      position &&
+      draggedTile.slice(0, 4) === year &&
+      Number(draggedTile.charAt(draggedTile.length - 1)) < position
+    ) {
+      setPlaceholderPosition({
+        year: year,
+        position: position,
+        flag: "after",
+      });
+    } else if (
+      draggedTile &&
+      year &&
+      draggedTile.slice(0, 4) === year &&
+      Number(draggedTile.charAt(draggedTile.length - 1)) === position
+    ) {
+      setPlaceholderPosition({ year: null, position: null, flag: null });
+    } else {
+      setPlaceholderPosition({ year, position, flag: "" });
+    }
   };
 
   const handleOnDrop = (
@@ -57,15 +99,15 @@ const EventsHome: React.FC<EventProps> = ({
     position: number
   ) => {
     e.preventDefault();
-
-    const tileId = e.dataTransfer.getData("tile_id");
-    const movedTileIndex = Number(tileId.charAt(tileId.length - 1));
-    const movedTileYear = tileId.slice(0, 4);
+    // const tileId = e.dataTransfer.getData("tile_id");
+    const movedTileIndex: number = Number(
+      draggedTile?.charAt(draggedTile.length - 1)
+    );
+    const movedTileYear: string = String(draggedTile?.slice(0, 4));
     const newDataSet: Record<string, Tile[]> = JSON.parse(
       JSON.stringify(tiles)
     );
-    const movedTile = newDataSet[movedTileYear][movedTileIndex];
-
+    const movedTile: Tile = newDataSet[movedTileYear][movedTileIndex];
     newDataSet[movedTileYear].splice(movedTileIndex, 1);
 
     if (year !== movedTileYear) {
@@ -84,7 +126,7 @@ const EventsHome: React.FC<EventProps> = ({
     updateTiles(newDataSet);
     updateYears(Object.keys(newDataSet));
     setDraggedTile(null);
-    setPlaceholderPosition({ year: null, position: null });
+    setPlaceholderPosition({ year: null, position: null, flag: null });
   };
 
   const saveTileData = (tileData: { message: string | null; date: string }) => {
@@ -93,10 +135,8 @@ const EventsHome: React.FC<EventProps> = ({
     );
     const year = new Date(tileData?.date).getFullYear().toString();
     const formattedDate = format(tileData.date, "yyyy-MM-dd");
-    console.log(year, formattedDate, tileData);
-    console.log(newDataSet);
+
     if (!newDataSet[year]) {
-      console.log(year, formattedDate, tileData);
       newDataSet[year] = [];
     }
     newDataSet[year].push({
@@ -137,13 +177,16 @@ const EventsHome: React.FC<EventProps> = ({
                     {tiles[year]?.map((tile, index) => {
                       return (
                         <div key={`${year}-tile-${index}`}>
-                          {/* Invisible Drop Zone created when a Tile is dragged over to a specific position 
-                          It Helps Show user where they can drop the Tile */}
+                          {/*
+                            Invisible Drop Zone created when a Tile is dragged over to a specific position 
+                            from bottom to top or from one group to another.
+                            It Helps Show user where they can drop the Tile.
+                          */}
                           {placeholderPosition.year === year &&
                             placeholderPosition.position === index &&
-                            draggedTile?.slice(0, 4) !== year && (
+                            placeholderPosition.flag !== "after" && (
                               <div
-                                className="h-[60px]"
+                                className="h-[90px]"
                                 onDragOver={(e) => {
                                   e.stopPropagation();
                                   handleDragOver(e, year, index);
@@ -165,17 +208,34 @@ const EventsHome: React.FC<EventProps> = ({
                             onDrop={handleOnDrop}
                             checkIfDraggedTile={checkIfDraggedTile}
                           />
+                          {/* 
+                            Invisible Drop Zone created when a Tile is dragged over from top to bottom in Same group. 
+                            It Helps Show user where they can drop the Tile.
+                          */}
+                          {placeholderPosition.year === year &&
+                            placeholderPosition.position === index &&
+                            placeholderPosition.flag === "after" && (
+                              <div
+                                className="h-[60px]"
+                                onDragOver={(e) => {
+                                  e.stopPropagation();
+                                  handleDragOver(e, year, index);
+                                }}
+                                onDrop={(e) => {
+                                  e.stopPropagation();
+                                  handleOnDrop(e, year, index);
+                                }}
+                              />
+                            )}
                         </div>
                       );
                     })}
 
                     {/* DropZone at the end of list in Case there is space */}
                     <div
-                      className="flex flex-grow rounded-lg "
+                      className="flex flex-grow h-[80px] p-7 rounded-lg"
                       onDragOver={(e) => handleDragOver(e)}
-                      onDrop={(e) =>
-                        handleOnDrop(e, year, tiles[year]?.length || 0)
-                      }
+                      onDrop={(e) => handleOnDrop(e, year, tiles[year]?.length)}
                     />
                   </div>
                 </div>

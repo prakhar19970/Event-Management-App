@@ -1,5 +1,5 @@
 // Initial list of tiles
-import { Tile } from "../types/tiles"; // Import the Tile type from the tiles.d.ts file
+import { Tile } from "../types/tile"; // Import the Tile type from the tiles.d.ts file
 
 export const initialTiles: Tile[] = [
     // year 2021

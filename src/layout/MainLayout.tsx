@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Header } from "@/components";
 import EventsHome from "@/pages/EventsHome";
-import { Tile } from "@/types/tiles";
+import { Tile } from "@/types/tile";
 import { initialTiles } from "@/constants/data";
 
 const MainLayout = () => {

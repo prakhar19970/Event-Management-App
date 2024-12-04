@@ -1,23 +1,4 @@
-import { Tile } from "@/types/tiles";
-
-interface TileProps {
-  tileData: Tile;
-  year: string;
-  position: number;
-  onDragStart: (e: React.DragEvent<HTMLDivElement>, tileId: string) => void;
-  onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDragOver: (
-    e: React.DragEvent<HTMLDivElement>,
-    year: string,
-    position: number
-  ) => void;
-  onDrop: (
-    e: React.DragEvent<HTMLDivElement>,
-    year: string,
-    position: number
-  ) => void;
-  checkIfDraggedTile: (tileId: string) => boolean;
-}
+import { TileProps } from "@/types/props";
 
 export const TileComp: React.FC<TileProps> = ({
   tileData,
@@ -35,7 +16,7 @@ export const TileComp: React.FC<TileProps> = ({
       className={`backdrop-blur-md p-4 rounded-lg transition-transform ease-in-out duration-300
         ${
           checkIfDraggedTile(`${year}-tile-${position}`)
-            ? "bg-black/85 text-white scale-110 cursor-grabbing shadow-2xl opacity-0 none"
+            ? "bg-black/85 text-white cursor-grabbing shadow-2xl opacity-0 none"
             : "cursor-grab bg-white/15 shadow-lg hover:bg-white/35 hover:scale-105"
         }`}
       draggable
@@ -53,7 +34,9 @@ export const TileComp: React.FC<TileProps> = ({
       <div className="flex flex-1 justify-end text-xs font-semibold">
         {tileData?.date}
       </div>
-      <div className="text-sm font-semibold break-words">{tileData?.message}</div>
+      <div className="text-sm font-semibold break-words">
+        {tileData?.message}
+      </div>
     </div>
   );
 };

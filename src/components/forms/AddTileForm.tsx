@@ -1,4 +1,4 @@
-import { Button, DatePickerInput } from "@/components";
+import { Button, DatePickerInput, ErrorMessage } from "@/components";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -40,7 +40,6 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
   const handleSave = () => {
     // Validate using Zod
     const result = schema.safeParse({ message, selectedDate });
-    console.log(result);
     if (!result.success) {
       // If validation fails, set errors and return
       const newErrors: { message?: string; selectedDate?: string } = {};
@@ -85,16 +84,13 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
             setErrors({ ...errors, message: null });
           }}
         />
-        {errors.message && (
-          <p className="text-red-500 text-xs">{errors.message}</p>
-        )}
+        <ErrorMessage message={errors.message} />
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
         <Label htmlFor="date">Date</Label>
         <DatePickerInput
           selectedDate={selectedDate}
           onSetDate={(newDate) => {
-            console.log(newDate);
             setErrors({ ...errors, selectedDate: undefined });
             setSelectedDate(newDate);
           }}
@@ -102,9 +98,7 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
             errors.selectedDate ? "border-red-500" : ""
           }`}
         />
-        {errors.selectedDate && (
-          <p className="text-red-500 text-xs">{errors.selectedDate}</p>
-        )}
+        <ErrorMessage message={errors.selectedDate} />
       </div>
       <div className="flex justify-center">
         <Button

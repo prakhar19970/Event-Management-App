@@ -1,14 +1,4 @@
-import { ReactNode } from "react";
-interface ButtonProps {
-  label?: string;
-  icon?: ReactNode;
-  primary?: boolean;
-  secondary?: boolean;
-  onClick: () => void;
-  className?: string;
-  iconPosition?: "left" | "right";
-  children?: ReactNode
-}
+import { ButtonProps } from "@/types/props";
 
 export const Button: React.FC<ButtonProps> = ({
   label,
@@ -18,12 +8,16 @@ export const Button: React.FC<ButtonProps> = ({
   secondary = false,
   onClick,
   className = "",
-  children
+  children,
 }) => {
   return (
     <button
       className={`${
-        primary && !secondary ? "bg-[#6699FF] bg-gradient-to-br from-white/60 to-white/10" : "bg-[#F40076] bg-gradient-to-br from-white/60 to-white/10"
+        primary
+          ? "bg-[#6699FF] bg-gradient-to-br from-white/60 to-white/10"
+          : secondary
+          ? "bg-[#F40076] bg-gradient-to-br from-white/60 to-white/10"
+          : ""
       } p-2  md:p-3 rounded shadow-md text-white font-semibold text-xs md:text-sm lg:text-md ${className}`}
       onClick={onClick}
     >
