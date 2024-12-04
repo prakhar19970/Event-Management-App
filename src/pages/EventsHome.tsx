@@ -67,7 +67,7 @@ const EventsHome: React.FC<EventProps> = ({
     position?: number
   ) => {
     e.preventDefault();
-    
+
     // If dragging within the same year
     if (
       draggedTile &&
@@ -100,33 +100,36 @@ const EventsHome: React.FC<EventProps> = ({
   ) => {
     e.preventDefault();
     // const tileId = e.dataTransfer.getData("tile_id");
-    const movedTileIndex: number = Number(
-      draggedTile?.charAt(draggedTile.length - 1)
-    );
-    const movedTileYear: string = String(draggedTile?.slice(0, 4));
-    const newDataSet: Record<string, Tile[]> = JSON.parse(
-      JSON.stringify(tiles)
-    );
-    const movedTile: Tile = newDataSet[movedTileYear][movedTileIndex];
-    newDataSet[movedTileYear].splice(movedTileIndex, 1);
+    if (draggedTile) {
+      const movedTileIndex = parseInt(
+        draggedTile?.charAt(draggedTile.length - 1),
+        10
+      );
+      const movedTileYear = draggedTile?.slice(0, 4);
+      const newDataSet: Record<string, Tile[]> = JSON.parse(
+        JSON.stringify(tiles)
+      );
+      const movedTile: Tile = newDataSet[movedTileYear][movedTileIndex];
+      newDataSet[movedTileYear].splice(movedTileIndex, 1);
 
-    if (year !== movedTileYear) {
-      movedTile.year = year;
-      movedTile.date = `${year}${movedTile?.date?.slice(4)}`;
-    }
-
-    newDataSet[year].splice(position, 0, movedTile);
-
-    Object.keys(newDataSet).forEach((key) => {
-      if (!newDataSet[key] || newDataSet[key].length === 0) {
-        delete newDataSet[key];
+      if (year !== movedTileYear) {
+        movedTile.year = year;
+        movedTile.date = `${year}${movedTile?.date?.slice(4)}`;
       }
-    });
 
-    updateTiles(newDataSet);
-    updateYears(Object.keys(newDataSet));
-    setDraggedTile(null);
-    setPlaceholderPosition({ year: null, position: null, flag: null });
+      newDataSet[year].splice(position, 0, movedTile);
+
+      Object.keys(newDataSet).forEach((key) => {
+        if (!newDataSet[key] || newDataSet[key].length === 0) {
+          delete newDataSet[key];
+        }
+      });
+
+      updateTiles(newDataSet);
+      updateYears(Object.keys(newDataSet));
+      setDraggedTile(null);
+      setPlaceholderPosition({ year: null, position: null, flag: null });
+    }
   };
 
   const saveTileData = (tileData: { message: string | null; date: string }) => {
