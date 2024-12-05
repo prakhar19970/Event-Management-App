@@ -1,53 +1,43 @@
-export const palletteColors = [
-  "#6699ff",
-    "#737dfe",
-    "#cb5eee",
-    "#fa7cbb",
-    "#f14658",
-    "#4be1ec",
-    "#f40076",
-    "#df98fa",
-    "#f06966",
-    "#e233ff",
-    "#ff6b00",
-    "#df98fa",
-    "#9055ff",
-    "#ed7b84",
-    "#9055ff",
-    "#402565",
-    "#30be96",
-    "#402662",
-    "#3900a6",
-    "#f14658",
-    "#dc2537",
-    "#fad6a6",
-    "#ff0076",
-    "#590fb7",
-    "#9055ff",
-    "#13e2da",
-    "#0b63f6",
-    "#003cc5",
-    "#d6ff7f",
-    "#00b3cc",
-    "#f40076",
-    "#342711",
-    "#000066",
-    "#ffcac9",
-    "#2f80ed",
-    "#b2ffda",
-    /* Primary Colors */
-    "#d0ebff",    // soft-blue
-    "#ffe8cc",    // muted-orange
-    "#d3f9d8",    // pastel-green
-    "#eae2f8",    // lavender
-    "#ffadad",    // soft-red
-    "#ffd6a5",    // muted-peach
-    "#fdffb6",    // pastel-yellow
-    "#caffbf",    // light-mint-green
-    "#9bf6ff",    // sky-blue
-    "#a0c4ff",    // baby-blue
-    "#bdb2ff",    // soft-violet
-    "#ffc6ff",    // light-pink
-    "#d4a5a5",    // muted-rose
-    "#81b29a"     // sage-green
-  ];
+export const paletteColors = [
+  "#6699ff",    // Periwinkle Blue
+  "#f14658",    // Coral Red
+  "#F29F58",    // Pastel Yellow
+  "#590fb7",    // Deep Indigo
+  "#4be1ec",    // Electric Cyan
+  "#fa7cbb",    // Candy Pink
+  "#737dfe",    // Lavender Indigo
+  "#ff6b00",    // Vibrant Orange
+  "#9055ff",    // Royal Purple
+  "#ffee00",    // Vivid Yellow
+  "#30be96",    // Teal Green
+  "#e233ff",    // Vivid Violet
+  "#2f80ed",    // Cerulean Blue
+  "#f06966",    // Muted Salmon
+  "#d6ff7f",    // Lime Green
+  "#ed7b84",    // Blush Rose
+  "#0b63f6",    // Bright Blue
+  "#dc2537",    // Crimson Red
+  "#d0ebff",    // Soft Blue
+  "#ffd6a5",    // Muted Peach
+  "#9bf6ff",    // Sky Blue
+  "#ffadad",    // Soft Red
+  "#402662",    // Midnight Purple
+  "#caffbf",    // Light Mint Green
+  "#003cc5",    // Deep Royal Blue
+  "#fad6a6",    // Peach Cream
+  "#d3f9d8",    // Pastel Green
+  "#ffc6ff",    // Light Pink
+  "#bdb2ff",    // Soft Violet
+  "#fdffb6",    // Pastel Yellow
+  "#590fb7",    // Deep Indigo
+  "#a0c4ff",    // Baby Blue
+  "#ffe8cc",    // Muted Orange
+  "#402565",    // Deep Plum
+  "#b2ffda",    // Mint Cream
+  "#f40076",    // Hot Pink
+  "#df98fa",    // Soft Lilac
+  "#342711",    // Dark Chocolate Brown
+  "#000066",    // Navy Blue
+  "#d4a5a5",    // Muted Rose
+  "#81b29a"     // Sage Green
+];

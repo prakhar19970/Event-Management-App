@@ -14,8 +14,8 @@ export const Modal: React.FC<ModalProps> = ({
         <div className="fixed inset-0 bg-black bg-opacity-20 p-4 items-center justify-center flex" />
         <div
           className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex 
-            flex-col gap-3 justify-center items-center p-4 w-1/2 rounded-md 
-            bg-gradient-to-br from-white/90 to-white/10 backdrop-blur-lg z-10
+            flex-col gap-3 justify-center items-center p-4 rounded-md 
+            bg-white backdrop-blur-lg z-10  w-[80%] md:w-1/2
             ${className}`}
         >
           {showClose && (

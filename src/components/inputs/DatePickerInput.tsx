@@ -36,7 +36,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-auto p-0 bg-gradient-to-br from-white/60 to-white/10 backdrop-blur-md bg-transparent"
+        className="w-auto p-0 bg-white"
         align="start"
       >
         <Calendar

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Tile } from "@/types/tile"; // Import the Tile type from the tiles.d.ts file
 import { TileComp, Button, AddTileForm, Modal } from "@/components";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, Calendar } from "lucide-react";
 import { format } from "date-fns";
-import { palletteColors } from "@/constants/pallette";
+import { paletteColors } from "@/constants/pallette";
 
 interface EventProps {
   tiles: Record<string, Tile[]>;
@@ -19,7 +19,7 @@ const EventsHome: React.FC<EventProps> = ({
   updateYears,
 }) => {
   const getPalletteColor = (index: number) => {
-    return palletteColors[index];
+    return paletteColors[index];
   };
   const [visibleTiles, setVisibleTiles] =
     useState<Record<string, Tile[]>>(tiles);
@@ -59,6 +59,7 @@ const EventsHome: React.FC<EventProps> = ({
     e.dataTransfer.clearData();
     setVisibleTiles(tiles); // Reset to original tiles
     setDraggedTile(null);
+    setPlaceholderPosition({ year: null, position: null, flag: "" });
   };
 
   const handleDragOver = (
@@ -67,8 +68,17 @@ const EventsHome: React.FC<EventProps> = ({
     position?: number
   ) => {
     e.preventDefault();
-    // If dragging within the same year
     if (
+      !draggedTile ||
+      !year ||
+      (draggedTile &&
+        year &&
+        draggedTile.slice(0, 4) === year &&
+        Number(draggedTile.charAt(draggedTile.length - 1)) === position)
+    ) {
+      setPlaceholderPosition({ year: null, position: null, flag: null });
+    } else if (
+      // If dragging within the same year
       draggedTile &&
       year &&
       position &&
@@ -80,14 +90,9 @@ const EventsHome: React.FC<EventProps> = ({
         position: position,
         flag: "after",
       });
-    } else if (
-      draggedTile &&
-      year &&
-      draggedTile.slice(0, 4) === year &&
-      Number(draggedTile.charAt(draggedTile.length - 1)) === position
-    ) {
-      setPlaceholderPosition({ year: null, position: null, flag: null });
     } else {
+      console.log("yoooollooo ---> ", year, position);
+      console.log(draggedTile);
       setPlaceholderPosition({ year, position, flag: "" });
     }
   };
@@ -98,7 +103,9 @@ const EventsHome: React.FC<EventProps> = ({
     position: number
   ) => {
     e.preventDefault();
+    console.log("hello");
     if (draggedTile) {
+      console.log("hello");
       const movedTileIndex = parseInt(
         draggedTile?.charAt(draggedTile.length - 1),
         10
@@ -162,13 +169,11 @@ const EventsHome: React.FC<EventProps> = ({
                   style={{
                     borderTop: `10px solid ${randomColor}`,
                   }}
-                  className="flex rounded-t-lg rounded-b-sm p-2 text-lg font-semibold backdrop-blur-md bg-white"
+                  className="flex items-center rounded-t-lg rounded-b-sm p-2 text-lg font-semibold backdrop-blur-md  bg-[#F1F1F1]"
                 >
-                  {year}
+                  <Calendar size="20" className="mr-2" /> {year}
                 </div>
-                <div
-                  className="rounded-xl h-[325px] bg-gradient-to-br from-white/60 to-white/10 backdrop-blur-md"
-                >
+                <div className="rounded-xl h-[325px] bg-[#F1F1F1] backdrop-blur-md">
                   <div className="flex flex-col gap-2 p-4 rounded-lg h-full overflow-y-scroll">
                     {tiles[year]?.map((tile, index) => {
                       return (
@@ -242,7 +247,7 @@ const EventsHome: React.FC<EventProps> = ({
         </div>
         <Button
           primary
-          className="flex justify-center items-center sticky bottom-10 hover:scale-125 left-full w-fit rounded-[30px] p-2"
+          className="flex justify-center items-center sticky bottom-10 hover:scale-125 left-full w-fit rounded-[30px] p-2 text-white"
           onClick={() => setOpenAddTileModal(true)}
         >
           <CirclePlus size="24px" />

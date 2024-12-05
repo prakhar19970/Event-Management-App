@@ -62,10 +62,12 @@ const MainLayout = () => {
         <Button
           primary
           label="Initial Order"
+          className="text-white"
           onClick={() => handleInitialOrder()}
         />
         <Button
           secondary
+          className="text-white"
           label="Sorted Order"
           onClick={() => handleSortedOrder()}
         />

@@ -1,4 +1,5 @@
 import { TileProps } from "@/types/props";
+import { Clock, Scroll } from "lucide-react";
 
 export const TileComp: React.FC<TileProps> = ({
   tileData,
@@ -20,7 +21,7 @@ export const TileComp: React.FC<TileProps> = ({
       className={`backdrop-blur-md p-4 rounded-lg transition-transform ease-in-out duration-300
         ${
           checkIfDraggedTile(`${year}-tile-${position}`)
-            ? "bg-black/85 text-white cursor-grabbing shadow-2xl opacity-0 none"
+            ? "bg-black/85 text-white cursor-grabbing shadow-2xl opacity-50 none"
             : "cursor-grab bg-white/85 shadow-lg hover:bg-white/35 hover:scale-105"
         }`}
       draggable
@@ -36,16 +37,13 @@ export const TileComp: React.FC<TileProps> = ({
       }}
     >
       <div
-        className="text-md font-semibold break-words mb-2"
-        style={{
-          color: `${
-            checkIfDraggedTile(`${year}-tile-${position}`) ? "#ffffff" : "#1A1A1A"
-          }`,
-        }}
+        className="flex flex-1 items-center text-md font-bold break-words mb-2"
       >
-        {tileData?.message}
+         <Scroll size="15px" className="mr-1"/> {tileData?.message}
       </div>
-      <div className="flex flex-1 text-xs font-bold text-[#A9A9A9]">{tileData?.date}</div>
+      <div className="flex flex-1 items-center text-xs font-bold text-[#A9A9A9]">
+        <Clock size="15px" className="mr-1"/> {tileData?.date}
+      </div>
     </div>
   );
 };

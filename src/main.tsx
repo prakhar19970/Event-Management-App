@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@/index.css";
 import App from "@/App.tsx";
-import backgroundImage from "@/assets/3d-background.jpg";
+import backgroundImage from "@/assets/background-2.jpg";
 
 
 const rootElement = document.getElementById("root");

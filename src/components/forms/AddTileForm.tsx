@@ -25,10 +25,7 @@ interface Error {
 
 interface AddFormTitleProps {
   className?: string;
-  onSave: (newTile: {
-    message: string;
-    date: string | undefined;
-  }) => void;
+  onSave: (newTile: { message: string; date: string | undefined }) => void;
 }
 
 export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
@@ -69,10 +66,14 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
   };
 
   return (
-    <div className="flex flex-col gap-3 w-full text-black">
-      <div className=" text-left text-base font-semibold">Add Tile</div>
+    <div className="flex flex-col gap-3 items-center w-full text-black">
+      <div className="flex w-full justify-start text-left text-base font-semibold">
+        Add Tile
+      </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="message">Message</Label>
+        <Label className="font-semibold" htmlFor="message">
+          Message
+        </Label>
         <Input
           type="text"
           className={`hover:bg-white focus-visible:bg-white ${
@@ -87,7 +88,9 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
         <ErrorMessage message={errors.message} />
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="date">Date</Label>
+        <Label className="font-semibold" htmlFor="date">
+          Date
+        </Label>
         <DatePickerInput
           selectedDate={selectedDate}
           onSetDate={(newDate) => {
@@ -100,14 +103,12 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
         />
         <ErrorMessage message={errors.selectedDate} />
       </div>
-      <div className="flex justify-center">
-        <Button
-          label="Save"
-          secondary
-          className="flex justify-center w-1/2 items-center"
-          onClick={handleSave}
-        />
-      </div>
+      <Button
+        label="Save"
+        primary
+        className="flex justify-center w-1/2 items-center text-white"
+        onClick={handleSave}
+      />
     </div>
   );
 };

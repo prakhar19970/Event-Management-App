@@ -14,9 +14,9 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       className={`${
         primary
-          ? "bg-[#6699FF] bg-gradient-to-br from-white/60 to-white/10"
+          ? "bg-gradient-to-r from-[#D07985] to-[#6A3FE5]"
           : secondary
-          ? "bg-[#F40076] bg-gradient-to-br from-white/60 to-white/10"
+          ? "bg-gradient-to-br from-[#6A3FE5] to-[#D07985]"
           : ""
       } p-2  md:p-3 rounded shadow-md font-semibold text-xs md:text-sm lg:text-md ${className}`}
       onClick={onClick}
