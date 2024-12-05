@@ -12,6 +12,4 @@ It is an SPA where
 For Input Components --> Input and Date picker --> shadCn is used.
 For other Css changes --> Tailwind CSS is used.
 
-I have used GlassMorphism for styling UI in app.
-
 
