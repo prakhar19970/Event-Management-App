@@ -206,8 +206,8 @@ const EventsHome: React.FC<EventProps> = ({
     <>
       <div className="flex flex-col p-6 gap-4 relative">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
-          {visibleTiles &&
-            Object.keys(visibleTiles).length > 0 &&
+          {tiles &&
+            Object.keys(tiles).length > 0 &&
             years.map((year, index) => {
               const randomColor = getPalletteColor(index);
               return (
@@ -222,7 +222,7 @@ const EventsHome: React.FC<EventProps> = ({
                   </div>
                   <div className="rounded-xl h-[325px] bg-gradient-to-br from-white/60 to-white/10 backdrop-blur-md">
                     <div className="flex flex-col gap-2 p-4 rounded-lg h-full overflow-y-scroll">
-                      {visibleTiles[year]?.map((tile, index) => {
+                      {tiles[year]?.map((tile, index) => {
                         return (
                           <div key={`${year}-tile-${index}`}>
                             {/*
