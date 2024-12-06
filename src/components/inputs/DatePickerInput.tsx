@@ -1,14 +1,5 @@
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { DatePickerInputProps } from "@/types/props";
 
 export const DatePickerInput: React.FC<DatePickerInputProps> = ({
@@ -17,36 +8,18 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
   className,
 }) => {
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "bg-transparent justify-start text-left font-normal",
-            !selectedDate && "text-muted-foreground",
-            className
-          )}
-        >
-          <CalendarIcon />
-          {selectedDate ? (
-            format(selectedDate, "yyyy-MM-dd")
-          ) : (
-            <span>Pick a date</span>
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        className="w-auto p-0 bg-white"
-        align="start"
-      >
-        <Calendar
-          mode="single"
-          selected={selectedDate}
-          onSelect={onSetDate}
-          // disabled={{ after: new Date() }} // Disable future dates
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
+    <DatePicker
+      selected={selectedDate}
+      onChange={(date) => onSetDate(date)}
+      peekNextMonth
+      showMonthDropdown
+      showYearDropdown
+      dropdownMode="select"
+      dateFormat="yyyy-MM-dd"
+      className={`w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm ${className}`}
+      popperClassName="react-datepicker-popper"
+      calendarClassName="bg-white border rounded-md shadow-lg p-2"
+      dayClassName={() => "hover:bg-blue-100 hover:text-blue-600 rounded-full"}
+    />
   );
 };

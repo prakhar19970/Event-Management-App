@@ -25,3 +25,11 @@ body {
     --radius: 0.5rem;
   }
 }
+.react-datepicker__header__dropdown{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.react-datepicker__month-select,
+.react-datepicker__year-select {
+   background: transparent;
+}

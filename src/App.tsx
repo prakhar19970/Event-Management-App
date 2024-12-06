@@ -1,11 +1,13 @@
-import MainLayout from '@/layout/MainLayout';
-
+import MainLayout from "@/layout/MainLayout";
+import { ToastProvider } from "./contexts/ToastContext";
 function App() {
   return (
     <div>
-      <MainLayout />
+      <ToastProvider>
+        <MainLayout />
+      </ToastProvider>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

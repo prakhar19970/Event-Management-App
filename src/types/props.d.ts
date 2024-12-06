@@ -26,8 +26,8 @@ interface ModalProps {
 }
 
 interface DatePickerInputProps {
-    onSetDate: (newDate: Date | undefined) => void;
-    selectedDate: Date | undefined;
+    onSetDate: (newDate: Date | null) => void;
+    selectedDate: Date | null;
     className?: string
 }
 
@@ -48,6 +48,14 @@ interface TileProps {
   ) => void;
   onDrop: (
     e: React.DragEvent<HTMLDivElement>,
+    year: string,
+    position: number
+  ) => void;
+  onDelete:(
+    year: string,
+    position: number
+  ) => void;
+  onEdit:(
     year: string,
     position: number
   ) => void;

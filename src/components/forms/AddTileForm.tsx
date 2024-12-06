@@ -1,8 +1,8 @@
 import { Button, DatePickerInput, ErrorMessage } from "@/components";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Tile } from "@/types/tile";
+import { useEffect, useState } from "react";
 import { z } from "zod";
+import { useToast } from "@/contexts/ToastContext";
 
 // Zod validation schema --> needed for validating the form fields
 const schema = z.object({
@@ -25,13 +25,31 @@ interface Error {
 
 interface AddFormTitleProps {
   className?: string;
-  onSave: (newTile: { message: string; date: string | undefined }) => void;
+  editMessage?: string;
+  editDate?: string;
+  onSave: (newTile: Tile, type?: string) => void;
 }
 
-export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+export const AddTileForm: React.FC<AddFormTitleProps> = ({
+  onSave,
+  editMessage,
+  editDate,
+}) => {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [message, setMessage] = useState<string>("");
   const [errors, setErrors] = useState<Error>({});
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    if (editDate && editMessage) {
+      setSelectedDate(new Date(editDate));
+      setMessage(editMessage);
+    }
+  }, [editMessage, editDate]);
+
+  const handleError = () => {
+    showToast("Something went wrong!", "danger");
+  };
 
   // Handle save and validate using Zod
   const handleSave = () => {
@@ -49,34 +67,40 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
         }
       });
       setErrors(newErrors);
+      handleError();
       return;
     }
 
     // If validation passes, send new tile to the main tiles-dataset
-    const newTile: { message: string; date: string | undefined } = {
+    const newTile: Tile = {
       message,
-      date: selectedDate?.toString(),
+      date: String(selectedDate),
     };
     // Clear form fields
     setMessage("");
-    setSelectedDate(undefined);
+    setSelectedDate(null);
 
-    // Send the Date to Parent where Form Is being used
-    onSave(newTile);
+    // Send the Data to Parent where Form Component is Imported
+    if (editDate && editMessage) {
+      // Edit New Data
+      onSave(newTile, "edited");
+    } else {
+      // Save New Data
+      onSave(newTile);
+    }
   };
 
   return (
     <div className="flex flex-col gap-3 items-center w-full text-black">
-      <div className="flex w-full justify-start text-left text-base font-semibold">
+      <div className="flex w-full max-w-sm justify-start text-left text-base font-semibold">
         Add Tile
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label className="font-semibold" htmlFor="message">
-          Message
-        </Label>
-        <Input
+        <div className="font-semibold">Message</div>
+        <input
           type="text"
-          className={`hover:bg-white focus-visible:bg-white ${
+          value={message}
+          className={`bg-transparent border p-2 rounded hover:bg-white focus-visible:bg-white ${
             errors.message ? "border-red-500" : ""
           }`}
           placeholder="Enter your Message"
@@ -88,9 +112,7 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
         <ErrorMessage message={errors.message} />
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label className="font-semibold" htmlFor="date">
-          Date
-        </Label>
+        <div className="font-semibold">Date</div>
         <DatePickerInput
           selectedDate={selectedDate}
           onSetDate={(newDate) => {
@@ -106,7 +128,7 @@ export const AddTileForm: React.FC<AddFormTitleProps> = ({ onSave }) => {
       <Button
         label="Save"
         primary
-        className="flex justify-center w-1/2 items-center text-white"
+        className="mt-1 flex justify-center w-1/2 items-center text-white"
         onClick={handleSave}
       />
     </div>
